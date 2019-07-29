@@ -47,3 +47,46 @@ TEST(StringHandler, SortStringLines)
 
 	EXPECT_EQ(lines, expected_lines);
 }
+
+TEST(StringHandler, RemoveExistingWordFromLine)
+{
+    StringHandler handler;
+
+    std::string line("One two three four five 8 5");
+
+    handler.RemoveWordFromSingleLine(line, "One");
+    EXPECT_EQ(line, "two three four five 8 5");
+
+    handler.RemoveWordFromSingleLine(line, "three");
+    EXPECT_EQ(line, "two four five 8 5");
+
+    handler.RemoveWordFromSingleLine(line, "5");
+    EXPECT_EQ(line, "two four five 8");
+}
+
+TEST(StringHandler, RemoveNotExistingWordFromLine)
+{
+    StringHandler handler;
+
+    std::string line("One two three four five 8 5");
+
+    handler.RemoveWordFromSingleLine(line, "One1");
+    EXPECT_EQ(line, "One two three four five 8 5");
+
+    handler.RemoveWordFromSingleLine(line, "three,");
+    EXPECT_EQ(line, "One two three four five 8 5");
+
+    handler.RemoveWordFromSingleLine(line, "51");
+    EXPECT_EQ(line, "One two three four five 8 5");
+}
+
+TEST(StringHandler, RemoveWordFromEachLine)
+{
+    StringHandler handler;
+
+    const std::vector<std::string> expected_lines = { "The first", "The second", "And the third", "The fourth without-one" };
+    std::vector<std::string> lines = { "The first one", "The second one", "And the third one", "The fourth without-one" };
+
+    handler.RemoveWordFromEachLine(lines, "one");
+    EXPECT_EQ(lines, expected_lines);
+}

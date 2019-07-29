@@ -13,6 +13,8 @@ bool CommandLineArguments::ParseCommandLineArguments(int argc, char** argv)
 		m_pathToInputFile = argv[1];
 		m_pathToOutputFile = argv[3];
 	
+        m_wordToRemove = argv[2];
+
 		return true;
 	}
 	else
@@ -27,7 +29,7 @@ bool CommandLineArguments::ParseCommandLineArguments(int argc, char** argv)
 void CommandLineArguments::PrintUsageCommandLine() const
 {
 	printf("Possible command line arguments:\n");
-	printf("\tapp.exe <input file> <word to delete> <output file>\n");
+	printf("\tapp.exe <path to input file> <word to delete> <path to output file>\n");
 }
 
 bool Application::Run(int argc, char** argv) const
@@ -42,7 +44,8 @@ bool Application::Run(int argc, char** argv) const
 	
 	std::vector<std::string> lines;
 	handler.ReadLines(inputStream, lines);
-	handler.SortLines(lines);
+    handler.RemoveWordFromEachLine(lines, arguments.m_wordToRemove);
+    handler.SortLines(lines);
 	
 	std::fstream outputStream;
 	_S(OpenFileStream(arguments.m_pathToOutputFile, outputStream, std::ios_base::out));

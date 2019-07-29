@@ -7,6 +7,7 @@ struct CommandLineArguments
 {
 	std::string m_pathToInputFile;
 	std::string m_pathToOutputFile;
+    std::string m_wordToRemove;
 
 	bool ParseCommandLineArguments(int, char**);
 	void PrintUsageCommandLine() const;
