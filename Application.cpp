@@ -8,66 +8,66 @@
 
 bool CommandLineArguments::ParseCommandLineArguments(int argc, char** argv)
 {
-	if (argc == 4)
-	{
-		m_pathToInputFile = argv[1];
-		m_pathToOutputFile = argv[3];
-	
+    if (argc == 4)
+    {
+        m_pathToInputFile = argv[1];
+        m_pathToOutputFile = argv[3];
+
         m_wordToRemove = argv[2];
 
-		return true;
-	}
-	else
-	{
-		printf("Impossible to parse command line arguments.\n");
-		PrintUsageCommandLine();
-	}
+        return true;
+    }
+    else
+    {
+        printf("Impossible to parse command line arguments.\n");
+        PrintUsageCommandLine();
+    }
 
-	return false;
+    return false;
 }
 
 void CommandLineArguments::PrintUsageCommandLine() const
 {
-	printf("Possible command line arguments:\n");
-	printf("\tapp.exe <path to input file> <word to delete> <path to output file>\n");
+    printf("Possible command line arguments:\n");
+    printf("\tapp.exe <path to input file> <word to delete> <path to output file>\n");
 }
 
 bool Application::Run(int argc, char** argv) const
 {
-	CommandLineArguments arguments;
-	_S(arguments.ParseCommandLineArguments(argc, argv));
-	
-	std::fstream inputStream;
-	_S(OpenFileStream(arguments.m_pathToInputFile, inputStream, std::ios_base::in));
+    CommandLineArguments arguments;
+    _S(arguments.ParseCommandLineArguments(argc, argv));
 
-	StringHandler handler;
-	
-	std::vector<std::string> lines;
-	handler.ReadLines(inputStream, lines);
+    std::fstream inputStream;
+    _S(OpenFileStream(arguments.m_pathToInputFile, inputStream, std::ios_base::in));
+
+    StringHandler handler;
+
+    std::vector<std::string> lines;
+    handler.ReadLines(inputStream, lines);
     handler.RemoveWordFromEachLine(lines, arguments.m_wordToRemove);
     handler.SortLines(lines);
-	
-	std::fstream outputStream;
-	_S(OpenFileStream(arguments.m_pathToOutputFile, outputStream, std::ios_base::out));
 
-	handler.PrintLines(outputStream, lines);
+    std::fstream outputStream;
+    _S(OpenFileStream(arguments.m_pathToOutputFile, outputStream, std::ios_base::out));
 
-	return true;
+    handler.PrintLines(outputStream, lines);
+
+    return true;
 }
 
 bool Application::OpenFileStream(const std::string& pathToFile, std::fstream& stream, std::ios_base::openmode mode) const
 {
-	// Of course, we can add some tests for this method to simulate different situations like:
-	// file not exist, don't have access to file, file is broken...
-	// But it's difficult enough and it can be useless.
-	stream.open(pathToFile, mode);
+    // Of course, we can add some tests for this method to simulate different situations like:
+    // file not exist, don't have access to file, file is broken...
+    // But it's difficult enough and it can be useless.
+    stream.open(pathToFile, mode);
 
-	if (!stream.is_open())
-	{
-		printf("Impossible to open file '%s'.\n", pathToFile.c_str());
+    if (!stream.is_open())
+    {
+        printf("Impossible to open file '%s'.\n", pathToFile.c_str());
 
-		return false;
-	}
+        return false;
+    }
 
-	return true;
+    return true;
 }
